@@ -21,3 +21,10 @@
 01/05/2025
 
 * Implemention of Cookies for security [https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/01-05-2025-Cookies.txt]
+
+02/05/2025
+
+* Added 'Search users by input' and 'Public pages of the users'.
+Created personalized url for profiles using 'URL Slug'.
+Created API routes for getting all users and user public page trought slug parameter on URL.
+[https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/publicPerfilsFront/Notes_Att/02-05-2025-publicProfiels.txt]
