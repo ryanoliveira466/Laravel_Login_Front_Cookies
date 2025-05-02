@@ -1,0 +1,127 @@
+Added 'Search users by input' and 'Public pages of the users'
+Created personalized url for profiles using 'URL Slug'
+Created API routes for getting all users and user public page trought slug parameter on URL
+
+
+
+
+UserController:
+public function publicIndex()
+{
+
+    try {
+        $users = User::select('name','email','slug')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Users listed successfully',
+            'usersCount' => $users->count(),
+            'users' => $users
+        ],200);
+    } catch (\Exception $error) {
+        return response()->json([
+            'success' => false,
+            'message' => "Failed to delete user",
+            'error' => $error->getMessage(),
+        ],500);
+    }
+   
+}
+
+
+
+public function showBySlug($slug)
+{
+    try {
+        $user = User::select('name', 'email')->where('slug', $slug)->firstOrFail();
+        return response()->json([
+            'success' => true,
+            'message' => 'User listed successfully',
+            'userCount' => $user->count(),
+            'user' => $user
+        ],200);
+    } catch (\Exception $error) {
+        return response()->json([
+            'success' => false,
+            'message' => "Failed to select user by slug",
+            'error' => $error->getMessage(),
+        ],500);
+    }
+}
+ 
+
+
+
+
+
+
+UserModel:
+    protected static function booted()
+{
+    static::creating(function ($user) {
+        do {
+            $slug = Str::slug($user->name) . '-' . Str::random(6);
+            $user->slug = $slug; 
+        } while (\App\Models\User::where('slug', $slug)->exists());
+    });
+
+    static::updating(function ($user) {
+        if ($user->isDirty('name')) {
+            do {
+                $slug = Str::slug($user->name) . '-' . Str::random(6);
+                $user->slug = $slug; 
+            } while (\App\Models\User::where('slug', $slug)->exists());
+        }
+        
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+api:
+Route::get('/users/public', [UserController::class, 'publicIndex']); //Seatch bar user
+Route::get('/user/slug/{slug}', [UserController::class, 'showBySlug']); //Profile user public
+
+
+
+
+
+
+
+
+migration:
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('slug')->unique()->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('slug');
+        });
+    }
+
+
+
+
+
+
+
+
