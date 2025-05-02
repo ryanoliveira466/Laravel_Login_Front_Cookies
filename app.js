@@ -1,6 +1,6 @@
 const apiUrl = 'http://127.0.0.1:8000/api'; // adjust if needed
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
 
   // Login
   if (document.getElementById('loginForm')) {
@@ -56,6 +56,45 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+   // Logout
+   if (document.getElementById('logoutButton')) {
+    document.getElementById('logoutButton').addEventListener('click', async function (e) {
+      if (confirm('Are you sure?')) {
+
+        await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
+          credentials: 'include'
+        });
+        const xsrf = decodeURIComponent(getCookie('XSRF-TOKEN'));
+
+        try {
+          const response = await fetch('http://127.0.0.1:8000/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'X-XSRF-TOKEN': xsrf,
+              'Accept': 'application/json'
+            }
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert('Logging out successfully: ' + data.message);
+            document.getElementById('message').innerText = `${data.message}` || 'An unknown error occurred';
+            location.reload();
+          } else {
+            alert('Logging out failed: ' + data.message);
+            alert('Logging out failed: ' + data.error);
+            document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
+          }
+        } catch (error) {
+          alert('Logging out failed: ' + error.message);
+          document.getElementById('message').innerText = error.message || 'An unknown error occurred';
+        }
+      }
+    });
+  }
+
   // Register
   if (document.getElementById('registerForm')) {
     document.getElementById('registerForm').addEventListener('submit', async function (e) {
@@ -82,12 +121,17 @@ document.addEventListener('DOMContentLoaded', function () {
       const password = document.getElementById('password').value.trim().replace(/\s+/g, "");
 
 
+      await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
+        credentials: 'include'
+      });
+      const csrfToken = decodeURIComponent(getCookie('XSRF-TOKEN'));
 
 
       try {
         const response = await fetch(`${apiUrl}/register`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-XSRF-TOKEN': csrfToken, },
           body: JSON.stringify({ name, email, password })
         });
 
@@ -111,7 +155,74 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  //
+  //Search users
+  if (document.getElementById('users')) {
+    let arrayUsers = []
+    getAllUsers()
+
+
+    async function getAllUsers() {
+      try {
+        const response = await fetch(`${apiUrl}/users/public`, {
+          credentials: 'include',        // ← send the session cookie
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Getting all users successfully: ' + data.message);
+          document.getElementById('message').innerText = data.message;
+
+          data.users.forEach(element => {
+            arrayUsers.push(element)
+          });
+
+        } else {
+          alert('Getting all users failed: ' + data.message);
+          alert('Getting all users failed: ' + data.error);
+          document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
+        }
+      } catch (error) {
+        alert('Getting all users failed: ' + error.message);
+        document.getElementById('message').innerText = error.message || 'An unknown error occurred';
+      }
+    }
+
+
+
+    //Input
+
+    if (document.getElementById('searchUsersInput')) {
+
+      document.getElementById('searchUsersInput').addEventListener('input', function () {
+        let userTable = document.getElementById('users')
+        userTable.innerHTML = ''
+        let input = document.getElementById('searchUsersInput').value
+
+        for (let i = 0; i < arrayUsers.length; i++) {
+          let userName = arrayUsers[i].name;
+          let userEmail = arrayUsers[i].email;
+          let userSlug = arrayUsers[i].slug
+
+          if (userName.trim().toLocaleLowerCase().includes(input.trim().toLocaleLowerCase()) || userEmail.trim().toLocaleLowerCase().includes(input.trim().toLocaleLowerCase())) {
+
+            userTable.innerHTML += `
+            <div style="margin: 0.5rem; display: flex; flex-direction: column;border: 1px solid black;">
+              <p>${userName}</p>
+              <p>${userEmail}</p>
+              <a href="member.html?slug=${userSlug}" target="_blank" style="color: blue; text-decoration: underline;">
+                Link para ${userName}
+              </a>
+            </div>
+          `;
+
+          }
+
+        }
+      })
+    }
+  }
 
   // Profile
   if (document.getElementById('profileForm')) {
@@ -239,43 +350,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
   }
 
-  // Logout
-  if (document.getElementById('logoutButton')) {
-    document.getElementById('logoutButton').addEventListener('click', async function (e) {
-      if (confirm('Are you sure?')) {
+ 
 
-        await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
-          credentials: 'include'
-        });
-        const xsrf = decodeURIComponent(getCookie('XSRF-TOKEN'));
 
-        try {
-          const response = await fetch('http://127.0.0.1:8000/logout', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'X-XSRF-TOKEN': xsrf,
-              'Accept': 'application/json'
-            }
-          });
 
-          const data = await response.json();
 
-          if (response.ok) {
-            alert('Logging out successfully: ' + data.message);
-            document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
-            location.reload();
-          } else {
-            alert('Logging out failed: ' + data.message);
-            alert('Logging out failed: ' + data.error);
-            document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
-          }
-        } catch (error) {
-          alert('Logging out failed: ' + error.message);
-          document.getElementById('message').innerText = error.message || 'An unknown error occurred';
+
+  //Member public profile
+  if (document.getElementById('userProfileMember')) {
+    try {
+      const slug = new URLSearchParams(window.location.search).get('slug');
+      const response = await fetch(`http://127.0.0.1:8000/api/user/slug/${slug}`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Member listed successfully: ' + data.message);
+        document.getElementById('message').innerText = `${data.message}` || 'An unknown error occurred';
+        document.getElementById('name').innerText = `${data.user.name}`;
+        document.getElementById('email').innerText = `${data.user.email}`;
+      } else {
+        alert('Listeninig member failed: ' + data.message);
+        alert('Listeninig member failed: ' + data.error);
+        document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
       }
-    });
+    } catch (error) {
+      alert('Listeninig member failed: ' + error.message);
+      document.getElementById('message').innerText = error.message || 'An unknown error occurred';
+    }
+
+
   }
 
 });
@@ -298,7 +408,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //Utilites
-
 // Load profile info
 async function loadProfile() {
 
