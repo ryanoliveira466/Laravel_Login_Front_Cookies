@@ -25,6 +25,15 @@
 02/05/2025
 
 * Added 'Search users by input' and 'Public pages of the users'.
-Created personalized url for profiles using 'URL Slug'.
-Created API routes for getting all users and user public page trought slug parameter on URL.
+* Created personalized url for profiles using 'URL Slug'.
+* Created API routes for getting all users and user public page trought slug parameter on URL.
 [https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/publicPerfilsFront/Notes_Att/02-05-2025-publicProfiels.txt]
+
+03/05/2025
+* Created table 'components_user' where users can post their content/related foreign key.
+* Users can create content from their profile page.
+* Users can see others users posts if they visit their member page.
+* Created main page for a project.
+* Foreing key and using query parameters for these.
+* Created api routes for these.
+* Created seeders for auto table fill when testing users an functions. [https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/03-05-2025-tableComponents-posts.txt]
