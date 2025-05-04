@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project</title>
+</head>
+<body>
+
+    <h3>Project:</h3>
+    <div id="projectMain">
+        <div style="display: flex; flex-direction: column;">
+            <p id="name"></p>
+            <p id="description"></p>
+        </div>
+
+        <h3>Tools:</h3>
+        <div style="display: flex; flex-direction: column;">
+            <p id="javascript"></p>
+            <p id="css"></p>
+            <p id="html"></p>
+        </div>
+    </div>
+
+    <a href="home.html">🏠 Back to Home</a> |
+    <a href='' id="userLinkProfile">Member profile</a> |
+    <p id="message"></p>
+    
+<script src="app.js"></script>
+<script>
+    const userSlug = new URLSearchParams(window.location.search).get('slug');
+    document.getElementById('userLinkProfile').href = `member.html?slug=${userSlug}`
+</script>   
+</body>
+</html>

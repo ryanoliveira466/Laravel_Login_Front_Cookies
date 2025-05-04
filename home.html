@@ -24,6 +24,13 @@
 
   <p id="message"></p>
 
+
+  <input type="text" id="searchUsersInput" placeholder="Search users:">
+  <div id="users">
+  </div>
+
+
+
   <script src="app.js"></script>
   <script>
 (async function() {
@@ -33,7 +40,7 @@
     try {
       const res = await fetch(`${apiBase}/api/user/my`, {
         credentials: 'include',
-        headers: { 'Accept': 'application/json' }
+        headers: { 'Accept': 'application/json', }
       });
       if (!res.ok) throw new Error('Not authenticated');
       const { user } = await res.json();
@@ -48,7 +55,7 @@
     const isLoggedIn = !!user;
     console.log('isLoggedIn:', isLoggedIn);
 
-    document.getElementById('guest').style.display    = isLoggedIn ? 'none': 'block';
+    document.getElementById('guest').style.display = isLoggedIn ? 'none': 'block';
     document.getElementById('loggedIn').style.display = isLoggedIn ? 'block':'none';
 
   });
