@@ -37,3 +37,7 @@
 * Foreing key and using query parameters for these.
 * Created api routes for these.
 * Created seeders for auto table fill when testing users an functions. [https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/03-05-2025-tableComponents-posts.txt]
+
+
+04&05/05/2025
+* Creating playground for front[https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/04%2605-05-2025-playground.txt]
