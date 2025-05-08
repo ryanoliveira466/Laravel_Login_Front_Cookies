@@ -46,3 +46,9 @@
 *Front end improvements project.html and edit.html
 *Instead of storing a 64Archive with very long characters,Use Laravel Storage, create a photo and request this photo from the server
 [https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/06-05-2025-imageStorage.txt]
+
+
+07/05/2025
+*Front end improvements
+*Project, create, and edit
+[https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/07-05-2025-js-beautifyBug.txt]
