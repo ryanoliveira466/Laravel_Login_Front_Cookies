@@ -1,4 +1,15 @@
+import { EditorState } from "https://esm.sh/@codemirror/state";
+import { EditorView, basicSetup } from "https://esm.sh/codemirror";
+import { javascript } from "https://esm.sh/@codemirror/lang-javascript";
+import { css } from "https://esm.sh/@codemirror/lang-css";
+import { html } from "https://esm.sh/@codemirror/lang-html";
+import { oneDark } from "https://esm.sh/@codemirror/theme-one-dark";
+
+
+
+
 const apiUrl = 'http://127.0.0.1:8000/api'; // adjust if needed
+const serverStorage = 'http://127.0.0.1:8000/storage/'
 
 document.addEventListener('DOMContentLoaded', async function () {
 
@@ -243,8 +254,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         return;
       }
 
+      if (document.getElementById('preview').src == "") {
+        alert('You must upload a photo')
+        return;
+      }
+
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim().replace(/\s+/g, "").toLowerCase();
+      const photo = document.getElementById('preview').src
 
       await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
         credentials: 'include'
@@ -260,7 +277,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             'Accept': 'application/json',
             'X-XSRF-TOKEN': csrfToken
           },
-          body: JSON.stringify({ name, email })
+          body: JSON.stringify({ name, email, photo })
         });
 
         const data = await response.json();
@@ -281,6 +298,24 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     });
 
+
+    //Photo
+    if (document.getElementById('preview')) {
+      const imageInput = document.getElementById('imageInput');
+      const preview = document.getElementById('preview');
+      imageInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.src = '';
+        }
+      });
+    }
 
 
 
@@ -347,91 +382,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
 
-
-
-    //Upload Content
-    document.getElementById('uploadContent').addEventListener('submit', async function (e) {
-      e.preventDefault()
-
-
-      if (document.getElementById('nameProject').value.trim() == "") {
-        alert('Name must not be blank')
-        return;
-      }
-
-      if (document.getElementById('description').value.trim() == "") {
-        alert('Description must not be blank')
-        return;
-      }
-
-      if (document.getElementById('javascript').value.trim() == "") {
-        alert('Javascript must not be blank')
-        return;
-      }
-
-      if (document.getElementById('css').value.trim() == "") {
-        alert('CSS must not be blank')
-        return;
-      }
-
-      if (document.getElementById('html').value.trim() == "") {
-        alert('HTML must not be blank')
-        return;
-      }
-
-      const name = document.getElementById('nameProject').value
-      const description = document.getElementById('description').value
-      const javascript = document.getElementById('javascript').value
-      const css = document.getElementById('css').value
-      const html = document.getElementById('html').value
-
-
-      await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
-        credentials: 'include'
-      });
-      const csrfToken = decodeURIComponent(getCookie('XSRF-TOKEN'));
-
-      try {
-        const response = await fetch(`${apiUrl}/user/post-content`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-XSRF-TOKEN': csrfToken
-          },
-          body: JSON.stringify({ name, description, javascript, css, html })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alert('Post created successfully ' + data.message);
-          document.getElementById('message').innerText = data.message || 'Something went wrong';
-        }
-        else {
-          alert('Posting failed: ' + data.message);
-          alert('Posting failed: ' + data.error);
-          document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
-        }
-      } catch (error) {
-        alert('Posting failed: ' + error.message);
-        document.getElementById('message').innerText = error.message || 'An unknown error occurred';
-      }
-
-
-    })
-
-
-
-
     //Load projects profile
     if (document.getElementById('projectsProfile')) {
       let arrayMyProjects = []
       let slugUser = ""
       getAllUserProjects()
-  
-  
+
+
       async function getAllUserProjects() {
         await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
           credentials: 'include'
@@ -439,14 +396,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         const csrfToken = decodeURIComponent(getCookie('XSRF-TOKEN'));
 
         try {
-          
+
           const response = await fetch(`${apiUrl}/user/myProjects`, {
             credentials: 'include',        // ← send the session cookie
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json','X-XSRF-TOKEN': csrfToken }
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken }
           });
-  
+
           const data = await response.json();
-  
+
           if (response.ok) {
             alert('Getting all projects from user successfully: ' + data.message);
             document.getElementById('message').innerText = data.message;
@@ -454,7 +411,7 @@ document.addEventListener('DOMContentLoaded', async function () {
               arrayMyProjects.push(element)
             });
             slugUser = data.userSlug
-            displayProjects()  
+            displayProjects()
           } else {
             alert('Getting all projects from user failed: ' + data.message);
             alert('Getting all projects from user failed: ' + data.error);
@@ -465,16 +422,16 @@ document.addEventListener('DOMContentLoaded', async function () {
           document.getElementById('message').innerText = error.message || 'An unknown error occurred';
         }
       }
-  
-  
-  
+
+
+
       // //Display projects profile
-       function displayProjects() {
-         if (document.getElementById('projectsProfile')) {
-           let projectsTable = document.getElementById('projectsProfile')
-        
-           for (let i = 0; i < arrayMyProjects.length; i++) {
-             projectsTable.innerHTML += `
+      function displayProjects() {
+        if (document.getElementById('projectsProfile')) {
+          let projectsTable = document.getElementById('projectsProfile')
+
+          for (let i = 0; i < arrayMyProjects.length; i++) {
+            projectsTable.innerHTML += `
                      <div style="margin: 0.5rem; display: flex; flex-direction: column;border: 1px solid black;">
                        <p>${arrayMyProjects[i].name}</p>
                        <p>${arrayMyProjects[i].description}</p>
@@ -489,147 +446,765 @@ document.addEventListener('DOMContentLoaded', async function () {
                        </a>
                      </div>
                    `;
-           }
-    
-         }
-       }
-   
+          }
+
+        }
+      }
+
     }
-
-
-
 
 
   }
 
+  // Link to the page create inside page profile upload content
 
-  //Edit project
-  if (document.getElementById('edit')) {
-    await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
-      credentials: 'include'
-    });
-    const csrfToken = decodeURIComponent(getCookie('XSRF-TOKEN'));
-    const projectSlug = new URLSearchParams(window.location.search).get('projectSlug');
+  if (document.getElementById('create')) {
+    //Effects
+    if (document.getElementById('create')) {
+      // Update the preview iframe
+      let activeIframe = 'iframeA';
+      function updatePreview() {
+        const jsContent = window.jsEditor.state.doc.toString();
+        const cssContent = window.cssEditor.state.doc.toString();
+        const htmlContent = window.htmlEditor.state.doc.toString();
 
+        const fullHTML = `
+           <html style="overflow: auto;">
+               <head>
+                   <style>${cssContent}</style>
+               </head>
+               <body>
+                   ${htmlContent}
+                   <script>
+                       ${jsContent}
+                   <\/script>
+               </body>
+           </html>`;
+
+        const nextIframe = activeIframe === 'iframeA' ? 'iframeB' : 'iframeA';
+        const current = document.getElementById(activeIframe);
+        const next = document.getElementById(nextIframe);
+
+
+        next.srcdoc = fullHTML;
+
+
+        next.onload = () => {
+          current.style.display = 'none';
+          next.style.display = 'block';
+          activeIframe = nextIframe;
+        };
+      }
+
+      // JavaScript Editor
+      window.jsEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, javascript()]
+
+        }),
+        parent: document.getElementById("js-editor"),
+        dispatch: (tr) => {
+          jsEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // CSS Editor
+      window.cssEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, css()]
+        }),
+        parent: document.getElementById("css-editor"),
+        dispatch: (tr) => {
+          cssEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // HTML Editor
+      window.htmlEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, html()]
+        }),
+        parent: document.getElementById("html-editor"),
+        dispatch: (tr) => {
+          htmlEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // Optional: make content accessible via buttons
+      window.getText = function (editorId) {
+        let editor;
+        if (editorId === "js-editor") editor = jsEditor;
+        else if (editorId === "css-editor") editor = cssEditor;
+        else if (editorId === "html-editor") editor = htmlEditor;
+
+        const content = editor.state.doc.toString();
+
+        navigator.clipboard.writeText(content)
+          .then(() => {
+            showCopyPopup();
+          })
+          .catch(err => {
+          });
+      };
+
+      //Expand
+      const expandBtn = document.getElementById('expand');
+      const frames = [document.getElementById('iframeA'), document.getElementById('iframeB')];
+
+      let isExpanded = false;
+
+      const expandIcon = `
+ <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+   <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707"/>
+ </svg>`;
+      const contractIcon = `
+ <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
+   <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707M15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707"/>
+ </svg>`;
+      expandBtn.addEventListener('click', function () {
+        frames.forEach(frame => {
+          if (!isExpanded) {
+            // Expand view
+            frame.classList.remove('top-50', 'h-50', 'w-100');
+            frame.classList.add('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          } else {
+            // Collapse view (return to original state)
+            frame.classList.remove('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+            frame.classList.add('top-50', 'h-50', 'w-100');
+          }
+        });
+
+        // Toggle button icon
+        expandBtn.innerHTML = isExpanded ? expandIcon : contractIcon;
+
+        isExpanded = !isExpanded;
+      });
+      frames.forEach(frame => {
+        frame.addEventListener('mouseenter', () => {
+          frame.classList.remove('top-50', 'h-50', 'w-100');
+          frame.classList.add('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          expandBtn.innerHTML = contractIcon;
+          isExpanded = true
+        });
+
+        frame.addEventListener('mouseleave', () => {
+          frame.classList.remove('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          frame.classList.add('top-50', 'h-50', 'w-100');
+          expandBtn.innerHTML = expandIcon;
+          isExpanded = false
+        });
+      });
+
+      // About
+      document.getElementById('aboutLink').addEventListener('click', function () {
+        let about = document.getElementById('about')
+        about.style.pointerEvents = 'all';
+        about.style.opacity = 1
+      })
+
+      document.getElementById('closeAbout').addEventListener('click', function () {
+        let about = document.getElementById('about')
+        setTimeout(function () {
+          about.style.pointerEvents = 'none'
+        }, 1500);
+        about.style.opacity = 0
+      })
+
+      // Desc
+      document.getElementById('descriptionLink').addEventListener('click', function () {
+        let description = document.getElementById('description')
+        description.style.pointerEvents = 'all';
+        description.style.opacity = 1
+      })
+
+      document.getElementById('closeDescription').addEventListener('click', function () {
+        let description = document.getElementById('description')
+        setTimeout(function () {
+          description.style.pointerEvents = 'none'
+        }, 1500);
+        description.style.opacity = 0
+      })
+
+      document.getElementById('formatter').addEventListener('click', function () {
+
+        const jsContent = window.jsEditor.state.doc.toString();
+        const cssContent = window.cssEditor.state.doc.toString();
+        const htmlContent = window.htmlEditor.state.doc.toString();
+
+        const formattedJS = js_beautify(jsContent, {
+          indent_size: 2,
+          space_in_empty_paren: true
+        });
+
+        const formattedCSS = css_beautify(cssContent, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+        const formattedHTML = html_beautify(htmlContent, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+
+        window.jsEditor.dispatch({
+          changes: { from: 0, to: jsEditor.state.doc.length, insert: formattedJS }
+        });
+
+        window.cssEditor.dispatch({
+          changes: { from: 0, to: cssEditor.state.doc.length, insert: formattedCSS, }
+        });
+
+        window.htmlEditor.dispatch({
+          changes: { from: 0, to: htmlEditor.state.doc.length, insert: formattedHTML }
+        });
+
+        showFormattedPopup()
+      })
+    }
+
+    showLoadingPopup("⏳ Loading...")
     try {
-      const response = await fetch(`${apiUrl}/user/myProject/${projectSlug}`, {
+      const response = await fetch(`${apiUrl}/user/my`, {
         credentials: 'include',        // ← send the session cookie
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json','X-XSRF-TOKEN': csrfToken }
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', }
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert('Getting project to edit from user successfully: ' + data.message);
-        document.getElementById('message').innerText = data.message;
-
-        //Populate the inputs
-        document.getElementById('nameProject').value = data.project.name
-        document.getElementById('description').value = data.project.description
-        document.getElementById('javascript').value = data.project.javascript
-        document.getElementById('css').value = data.project.css
-        document.getElementById('html').value = data.project.html
-        //Populate the inputs 
-  
-        
+        alert('Success loading profile');
+        document.getElementById('nameUserProfile').textContent = data.user.name;
+        document.getElementById('imageProfile').src = `${serverStorage}${data.user.photo}`
+        document.getElementById('userLinkProfile').href = `member.html?slug=${data.user.slug}`
       } else {
-        alert('Getting project to edit from user failed: ' + data.message);
-        alert('Getting project to edit from user failed: ' + data.error);
-        document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
+        showErrorPopup()
+        alert('Failed to load profile');
       }
     } catch (error) {
-      alert('Getting project to edit from user failed: ' + error.message);
-      document.getElementById('message').innerText = error.message || 'An unknown error occurred';
+      showErrorPopup()
+      console.error(error);
+      alert('Error loading profile');
+    }
+    finally {
+      hideLoadingPopup()
+    }
+
+    //Submit updating
+    document.getElementById('save').addEventListener('click', function () {
+      convertVisibleComments();
+      const titleContent = document.getElementById('projectName').value
+      const descriptionContent = document.getElementById('projectDescription').value
+      const jsContent = window.jsEditor.state.doc.toString();
+      const cssContent = window.cssEditor.state.doc.toString();
+      const htmlContent = window.htmlEditor.state.doc.toString();
+
+      if (titleContent.trim() === "") {
+        showErrorPopup("😐 Title is empty!");
+        return;
+      }
+      if (descriptionContent.trim() === "") {
+        showErrorPopup("😐 Description is empty!");
+        return;
+      }
+      if (jsContent.trim() === "") {
+        showErrorPopup("😐 Javascript is empty!");
+        return;
+      }
+      if (cssContent.trim() === "") {
+        showErrorPopup("😐 CSS is empty!");
+        return;
+      }
+      if (htmlContent.trim() === "") {
+        showErrorPopup("😐 HTML is empty!");
+        return;
+      }
+
+      document.getElementById('projectNameForm').value = titleContent
+      document.getElementById('projectDescriptionForm').value = descriptionContent
+      document.getElementById('javascriptForm').value = jsContent
+      document.getElementById('cssForm').value = cssContent
+      document.getElementById('htmlForm').value = htmlContent
+      document.getElementById('submitForm').click()
+    })
+
+    document.getElementById('editForm').addEventListener('submit', async function (e) {
+      e.preventDefault()
+
+      if (document.getElementById('projectNameForm').value.trim() == "") {
+        alert('Name must not be blank')
+        return;
+      }
+
+      if (document.getElementById('projectDescriptionForm').value.trim() == "") {
+        alert('Description must not be blank')
+        return;
+      }
+
+      if (document.getElementById('javascriptForm').value.trim() == "") {
+        alert('Javascript must not be blank')
+        return;
+      }
+
+      if (document.getElementById('cssForm').value.trim() == "") {
+        alert('CSS must not be blank')
+        return;
+      }
+
+      if (document.getElementById('htmlForm').value.trim() == "") {
+        alert('HTML must not be blank')
+        return;
+      }
+
+
+
+      const name = document.getElementById('projectNameForm').value
+      const description = document.getElementById('projectDescriptionForm').value
+      const javascript = document.getElementById('javascriptForm').value
+      const css = document.getElementById('cssForm').value
+      const html = document.getElementById('htmlForm').value
+
+      showLoadingPopup("⏳ Saving...")
+      try {
+        await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
+          credentials: 'include'
+        });
+        const csrfToken = decodeURIComponent(getCookie('XSRF-TOKEN'));
+        const projectSlug = new URLSearchParams(window.location.search).get('projectSlug');
+
+        const response = await fetch(`${apiUrl}/user/post-content`, {
+          method: 'POST',
+          credentials: 'include',        // ← send the session cookie
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
+          body: JSON.stringify({ name, description, javascript, css, html })
+        });
+
+        const data = await response.json();
+
+
+        if (response.ok) {
+          alert('Creating project went successfully: ' + data.message);
+          showSuccessPopup()
+        } else {
+          alert('Creating project from user failed: ' + data.message);
+          alert('Creating project from user failed: ' + data.error);
+          showErrorPopup()
+        }
+      } catch (error) {
+        alert('Creating project from user failed: ' + error.message);
+        showErrorPopup()
+      }
+      finally {
+        hideLoadingPopup()
+      }
+    })
+  }
+
+  //Edit project
+  if (document.getElementById('edit')) {
+
+    //Effects
+    if (document.getElementById('edit')) {
+      // Update the preview iframe
+      let activeIframe = 'iframeA';
+      function updatePreview() {
+        const jsContent = window.jsEditor.state.doc.toString();
+        const cssContent = window.cssEditor.state.doc.toString();
+        const htmlContent = window.htmlEditor.state.doc.toString();
+
+        const fullHTML = `
+           <html style="overflow: auto;">
+               <head>
+                   <style>${cssContent}</style>
+               </head>
+               <body>
+                   ${htmlContent}
+                   <script>
+                       ${jsContent}
+                   <\/script>
+               </body>
+           </html>`;
+
+        const nextIframe = activeIframe === 'iframeA' ? 'iframeB' : 'iframeA';
+        const current = document.getElementById(activeIframe);
+        const next = document.getElementById(nextIframe);
+
+
+        next.srcdoc = fullHTML;
+
+
+        next.onload = () => {
+          current.style.display = 'none';
+          next.style.display = 'block';
+          activeIframe = nextIframe;
+        };
+      }
+
+      // JavaScript Editor
+      window.jsEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, javascript()]
+
+        }),
+        parent: document.getElementById("js-editor"),
+        dispatch: (tr) => {
+          jsEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // CSS Editor
+      window.cssEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, css()]
+        }),
+        parent: document.getElementById("css-editor"),
+        dispatch: (tr) => {
+          cssEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // HTML Editor
+      window.htmlEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, html()]
+        }),
+        parent: document.getElementById("html-editor"),
+        dispatch: (tr) => {
+          htmlEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // Optional: make content accessible via buttons
+      window.getText = function (editorId) {
+        let editor;
+        if (editorId === "js-editor") editor = jsEditor;
+        else if (editorId === "css-editor") editor = cssEditor;
+        else if (editorId === "html-editor") editor = htmlEditor;
+
+        const content = editor.state.doc.toString();
+
+        navigator.clipboard.writeText(content)
+          .then(() => {
+            showCopyPopup();
+          })
+          .catch(err => {
+          });
+      };
+
+      //Expand
+      const expandBtn = document.getElementById('expand');
+      const frames = [document.getElementById('iframeA'), document.getElementById('iframeB')];
+
+      let isExpanded = false;
+
+      const expandIcon = `
+ <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+   <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707"/>
+ </svg>`;
+      const contractIcon = `
+ <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
+   <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707M15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707"/>
+ </svg>`;
+      expandBtn.addEventListener('click', function () {
+        frames.forEach(frame => {
+          if (!isExpanded) {
+            // Expand view
+            frame.classList.remove('top-50', 'h-50', 'w-100');
+            frame.classList.add('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          } else {
+            // Collapse view (return to original state)
+            frame.classList.remove('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+            frame.classList.add('top-50', 'h-50', 'w-100');
+          }
+        });
+
+        // Toggle button icon
+        expandBtn.innerHTML = isExpanded ? expandIcon : contractIcon;
+
+        isExpanded = !isExpanded;
+      });
+      frames.forEach(frame => {
+        frame.addEventListener('mouseenter', () => {
+          frame.classList.remove('top-50', 'h-50', 'w-100');
+          frame.classList.add('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          expandBtn.innerHTML = contractIcon;
+          isExpanded = true
+        });
+
+        frame.addEventListener('mouseleave', () => {
+          frame.classList.remove('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          frame.classList.add('top-50', 'h-50', 'w-100');
+          expandBtn.innerHTML = expandIcon;
+          isExpanded = false
+        });
+      });
+
+      // About
+      document.getElementById('aboutLink').addEventListener('click', function () {
+        let about = document.getElementById('about')
+        about.style.pointerEvents = 'all';
+        about.style.opacity = 1
+      })
+
+      document.getElementById('closeAbout').addEventListener('click', function () {
+        let about = document.getElementById('about')
+        setTimeout(function () {
+          about.style.pointerEvents = 'none'
+        }, 1500);
+        about.style.opacity = 0
+      })
+
+      // Desc
+      document.getElementById('descriptionLink').addEventListener('click', function () {
+        let description = document.getElementById('description')
+        description.style.pointerEvents = 'all';
+        description.style.opacity = 1
+      })
+
+      document.getElementById('closeDescription').addEventListener('click', function () {
+        let description = document.getElementById('description')
+        setTimeout(function () {
+          description.style.pointerEvents = 'none'
+        }, 1500);
+        description.style.opacity = 0
+      })
+
+      document.getElementById('formatter').addEventListener('click', function () {
+
+        const jsContent = window.jsEditor.state.doc.toString();
+        const cssContent = window.cssEditor.state.doc.toString();
+        const htmlContent = window.htmlEditor.state.doc.toString();
+
+        const formattedJS = js_beautify(jsContent, {
+          indent_size: 2,
+          space_in_empty_paren: true
+        });
+
+        const formattedCSS = css_beautify(cssContent, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+        const formattedHTML = html_beautify(htmlContent, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+
+        window.jsEditor.dispatch({
+          changes: { from: 0, to: jsEditor.state.doc.length, insert: formattedJS }
+        });
+
+        window.cssEditor.dispatch({
+          changes: { from: 0, to: cssEditor.state.doc.length, insert: formattedCSS, }
+        });
+
+        window.htmlEditor.dispatch({
+          changes: { from: 0, to: htmlEditor.state.doc.length, insert: formattedHTML }
+        });
+
+        showFormattedPopup()
+      })
     }
 
 
-
-    //Submit updating
-    document.getElementById('edit').addEventListener('submit', async function (e) {
-      e.preventDefault()
+    showLoadingPopup()
+    try {
       await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
         credentials: 'include'
       });
       const csrfToken = decodeURIComponent(getCookie('XSRF-TOKEN'));
       const projectSlug = new URLSearchParams(window.location.search).get('projectSlug');
 
-      console.log(projectSlug);
-      
+      const response = await fetch(`${apiUrl}/user/myProject/${projectSlug}`, {
+        credentials: 'include',        // ← send the session cookie
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken }
+      });
 
-      if (document.getElementById('nameProject').value.trim() == "") {
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Getting project to edit from user successfully: ' + data.message);
+
+        document.getElementById('projectName').value = `${data.project.name}`
+        document.getElementById('projectDescription').value = `${data.project.description}`
+        document.getElementById('nameUserProfile').innerText = `${data.userName}`
+        document.getElementById('imageProfile').src = `${serverStorage}${data.userImage}`
+        document.getElementById('userLinkProfile').href = `member.html?slug=${data.userSlug}`
+
+        const formattedJS = js_beautify(data.project.javascript, {
+          indent_size: 2,
+          space_in_empty_paren: true
+        });
+
+        const formattedCSS = css_beautify(data.project.css, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+        const formattedHTML = html_beautify(data.project.html, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+
+        window.jsEditor.dispatch({
+          changes: { from: 0, to: jsEditor.state.doc.length, insert: formattedJS }
+        });
+
+        window.cssEditor.dispatch({
+          changes: { from: 0, to: cssEditor.state.doc.length, insert: formattedCSS, }
+        });
+
+        window.htmlEditor.dispatch({
+          changes: { from: 0, to: htmlEditor.state.doc.length, insert: formattedHTML }
+        });
+
+
+      } else {
+        alert('Getting project to edit from user failed: ' + data.message);
+        alert('Getting project to edit from user failed: ' + data.error);
+        showErrorPopup()
+      }
+    } catch (error) {
+      alert('Getting project to edit from user failed: ' + error.message);
+      showErrorPopup()
+    }
+    finally {
+      hideLoadingPopup()
+    }
+
+    //Submit updating
+
+    document.getElementById('save').addEventListener('click', function () {
+
+      convertVisibleComments();
+      const titleContent = document.getElementById('projectName').value
+      const descriptionContent = document.getElementById('projectDescription').value
+      const jsContent = window.jsEditor.state.doc.toString();
+      const cssContent = window.cssEditor.state.doc.toString();
+      const htmlContent = window.htmlEditor.state.doc.toString();
+
+      if (titleContent.trim() === "") {
+        showErrorPopup("😐 Title is empty!");
+        return;
+      }
+      if (descriptionContent.trim() === "") {
+        showErrorPopup("😐 Description is empty!");
+        return;
+      }
+      if (jsContent.trim() === "") {
+        showErrorPopup("😐 Javascript is empty!");
+        return;
+      }
+      if (cssContent.trim() === "") {
+        showErrorPopup("😐 CSS is empty!");
+        return;
+      }
+      if (htmlContent.trim() === "") {
+        showErrorPopup("😐 HTML is empty!");
+        return;
+      }
+
+      document.getElementById('projectNameForm').value = titleContent
+      document.getElementById('projectDescriptionForm').value = descriptionContent
+      document.getElementById('javascriptForm').value = (jsContent);
+      document.getElementById('cssForm').value = cssContent
+      document.getElementById('htmlForm').value = htmlContent
+      document.getElementById('submitForm').click()
+    })
+
+    document.getElementById('editForm').addEventListener('submit', async function (e) {
+      e.preventDefault()
+
+      if (document.getElementById('projectNameForm').value.trim() == "") {
         alert('Name must not be blank')
         return;
       }
 
-      if (document.getElementById('description').value.trim() == "") {
+      if (document.getElementById('projectDescriptionForm').value.trim() == "") {
         alert('Description must not be blank')
         return;
       }
 
-      if (document.getElementById('javascript').value.trim() == "") {
+      if (document.getElementById('javascriptForm').value.trim() == "") {
         alert('Javascript must not be blank')
         return;
       }
 
-      if (document.getElementById('css').value.trim() == "") {
+      if (document.getElementById('cssForm').value.trim() == "") {
         alert('CSS must not be blank')
         return;
       }
 
-      if (document.getElementById('html').value.trim() == "") {
+      if (document.getElementById('htmlForm').value.trim() == "") {
         alert('HTML must not be blank')
         return;
       }
 
-      
-      const name = document.getElementById('nameProject').value
-      const description = document.getElementById('description').value
-      const javascript = document.getElementById('javascript').value
-      const css = document.getElementById('css').value
-      const html = document.getElementById('html').value
 
+
+      const name = document.getElementById('projectNameForm').value
+      const description = document.getElementById('projectDescriptionForm').value
+      const javascript = document.getElementById('javascriptForm').value
+      const css = document.getElementById('cssForm').value
+      const html = document.getElementById('htmlForm').value
+
+      showLoadingPopup("⏳ Saving...")
       try {
+        await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
+          credentials: 'include'
+        });
+        const csrfToken = decodeURIComponent(getCookie('XSRF-TOKEN'));
+        const projectSlug = new URLSearchParams(window.location.search).get('projectSlug');
+
         const response = await fetch(`${apiUrl}/user/update-content/${projectSlug}`, {
           method: 'POST',
           credentials: 'include',        // ← send the session cookie
-          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json','X-XSRF-TOKEN': csrfToken },
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
           body: JSON.stringify({ name, description, javascript, css, html })
         });
-  
+
         const data = await response.json();
-  
-  
+
+
         if (response.ok) {
-          alert('Updating project from user successfully: ' + data.message);
-          document.getElementById('message').innerText = data.message;
+          alert('Updating project went successfully: ' + data.message);
+          showSuccessPopup()
         } else {
           alert('Updating project from user failed: ' + data.message);
           alert('Updating project from user failed: ' + data.error);
-          document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
+          showErrorPopup()
         }
       } catch (error) {
         alert('Updating project from user failed: ' + error.message);
-        document.getElementById('message').innerText = error.message || 'An unknown error occurred';
+        showErrorPopup()
+      }
+      finally {
+        hideLoadingPopup()
       }
     })
 
 
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -707,7 +1282,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       if (document.getElementById('projects')) {
         const slugUser = new URLSearchParams(window.location.search).get('slug');
         let projectsTable = document.getElementById('projects')
-      
+
         for (let i = 0; i < arrayUserProjects.length; i++) {
           projectsTable.innerHTML += `
                   <div style="margin: 0.5rem; display: flex; flex-direction: column;border: 1px solid black;">
@@ -722,17 +1297,231 @@ document.addEventListener('DOMContentLoaded', async function () {
                   </div>
                 `;
         }
-  
+
       }
     }
- 
+
   }
 
 
   //Main page for project public
   if (document.getElementById('projectMain')) {
-    
-    
+
+    //Effects
+    if (document.getElementById('projectMain')) {
+      // Update the preview iframe
+      let activeIframe = 'iframeA';
+      function updatePreview() {
+        const jsContent = window.jsEditor.state.doc.toString();
+        const cssContent = window.cssEditor.state.doc.toString();
+        const htmlContent = window.htmlEditor.state.doc.toString();
+
+        const fullHTML = `
+            <html style="overflow: auto;">
+                <head>
+                    <style>${cssContent}</style>
+                </head>
+                <body>
+                    ${htmlContent}
+                    <script>
+                        ${jsContent}
+                    <\/script>
+                </body>
+            </html>`;
+
+        const nextIframe = activeIframe === 'iframeA' ? 'iframeB' : 'iframeA';
+        const current = document.getElementById(activeIframe);
+        const next = document.getElementById(nextIframe);
+
+
+        next.srcdoc = fullHTML;
+
+
+        next.onload = () => {
+          current.style.display = 'none';
+          next.style.display = 'block';
+          activeIframe = nextIframe;
+        };
+      }
+
+      // JavaScript Editor
+      window.jsEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, javascript()]
+
+        }),
+        parent: document.getElementById("js-editor"),
+        dispatch: (tr) => {
+          jsEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // CSS Editor
+      window.cssEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, css()]
+        }),
+        parent: document.getElementById("css-editor"),
+        dispatch: (tr) => {
+          cssEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // HTML Editor
+      window.htmlEditor = new EditorView({
+        state: EditorState.create({
+          doc: ``,
+          extensions: [basicSetup, html()]
+        }),
+        parent: document.getElementById("html-editor"),
+        dispatch: (tr) => {
+          htmlEditor.update([tr]);
+          if (tr.docChanged) updatePreview();
+        }
+      });
+
+      // Optional: make content accessible via buttons
+      window.getText = function (editorId) {
+        let editor;
+        if (editorId === "js-editor") editor = jsEditor;
+        else if (editorId === "css-editor") editor = cssEditor;
+        else if (editorId === "html-editor") editor = htmlEditor;
+
+        const content = editor.state.doc.toString();
+
+        navigator.clipboard.writeText(content)
+          .then(() => {
+            showCopyPopup();
+          })
+          .catch(err => {
+          });
+      };
+
+      //Expand
+      const expandBtn = document.getElementById('expand');
+      const frames = [document.getElementById('iframeA'), document.getElementById('iframeB')];
+
+      let isExpanded = false;
+
+      const expandIcon = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707"/>
+  </svg>`;
+      const contractIcon = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707M15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707"/>
+  </svg>`;
+      expandBtn.addEventListener('click', function () {
+        frames.forEach(frame => {
+          if (!isExpanded) {
+            // Expand view
+            frame.classList.remove('top-50', 'h-50', 'w-100');
+            frame.classList.add('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          } else {
+            // Collapse view (return to original state)
+            frame.classList.remove('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+            frame.classList.add('top-50', 'h-50', 'w-100');
+          }
+        });
+
+        // Toggle button icon
+        expandBtn.innerHTML = isExpanded ? expandIcon : contractIcon;
+
+        isExpanded = !isExpanded;
+      });
+      frames.forEach(frame => {
+        frame.addEventListener('mouseenter', () => {
+          frame.classList.remove('top-50', 'h-50', 'w-100');
+          frame.classList.add('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          expandBtn.innerHTML = contractIcon;
+          isExpanded = true
+        });
+
+        frame.addEventListener('mouseleave', () => {
+          frame.classList.remove('vw-100', 'vh-100', 'pt-60', 'top-0', 'z-0');
+          frame.classList.add('top-50', 'h-50', 'w-100');
+          expandBtn.innerHTML = expandIcon;
+          isExpanded = false
+        });
+      });
+
+      // About
+      document.getElementById('aboutLink').addEventListener('click', function () {
+        let about = document.getElementById('about')
+        about.style.pointerEvents = 'all';
+        about.style.opacity = 1
+      })
+
+      document.getElementById('closeAbout').addEventListener('click', function () {
+        let about = document.getElementById('about')
+        setTimeout(function () {
+          about.style.pointerEvents = 'none'
+        }, 1500);
+        about.style.opacity = 0
+      })
+
+      // Desc
+      document.getElementById('descriptionLink').addEventListener('click', function () {
+        let description = document.getElementById('description')
+        description.style.pointerEvents = 'all';
+        description.style.opacity = 1
+      })
+
+      document.getElementById('closeDescription').addEventListener('click', function () {
+        let description = document.getElementById('description')
+        setTimeout(function () {
+          description.style.pointerEvents = 'none'
+        }, 1500);
+        description.style.opacity = 0
+      })
+
+      document.getElementById('formatter').addEventListener('click', function () {
+
+        const jsContent = window.jsEditor.state.doc.toString();
+        const cssContent = window.cssEditor.state.doc.toString();
+        const htmlContent = window.htmlEditor.state.doc.toString();
+
+        const formattedJS = js_beautify(jsContent, {
+          indent_size: 2,
+          space_in_empty_paren: true
+        });
+
+        const formattedCSS = css_beautify(cssContent, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+        const formattedHTML = html_beautify(htmlContent, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+
+        window.jsEditor.dispatch({
+          changes: { from: 0, to: jsEditor.state.doc.length, insert: formattedJS }
+        });
+
+        window.cssEditor.dispatch({
+          changes: { from: 0, to: cssEditor.state.doc.length, insert: formattedCSS, }
+        });
+
+        window.htmlEditor.dispatch({
+          changes: { from: 0, to: htmlEditor.state.doc.length, insert: formattedHTML }
+        });
+
+        showFormattedPopup()
+      })
+    }
+
+    //Beginning request
+
+    showLoadingPopup();
     try {
       const userSlug = new URLSearchParams(window.location.search).get('slug');
       const projectSlug = new URLSearchParams(window.location.search).get('projectSlug');
@@ -748,44 +1537,56 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       if (response.ok) {
         alert('Post main listed successfully: ' + data.message);
-        document.getElementById('message').innerText = `${data.message}` || 'An unknown error occurred';
-        document.getElementById('name').innerText = `${data.project.name}`;
-        document.getElementById('description').innerText = `${data.project.description}`;
-        document.getElementById('javascript').innerText = `${data.project.javascript}`;
-        document.getElementById('css').innerText = `${data.project.css}`;
-        document.getElementById('html').innerText = `${data.project.html}`;
+        document.getElementById('projectName').value = `${data.project.name}`
+        document.getElementById('projectDescription').value = `${data.project.description}`
+        document.getElementById('nameUserProfile').innerText = `${data.userName}`
+        document.getElementById('imageProfile').src = `${serverStorage}${data.userImage}`
+
+        const formattedJS = js_beautify(data.project.javascript, {
+          indent_size: 2,
+          space_in_empty_paren: true
+        });
+
+        const formattedCSS = css_beautify(data.project.css, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+        const formattedHTML = html_beautify(data.project.html, {
+          indent: '  ',
+          openbrace: 'end-of-line',
+          autosemicolon: true,
+        });
+
+
+        window.jsEditor.dispatch({
+          changes: { from: 0, to: jsEditor.state.doc.length, insert: formattedJS }
+        });
+
+        window.cssEditor.dispatch({
+          changes: { from: 0, to: cssEditor.state.doc.length, insert: formattedCSS, }
+        });
+
+        window.htmlEditor.dispatch({
+          changes: { from: 0, to: htmlEditor.state.doc.length, insert: formattedHTML }
+        });
       } else {
         alert('Listening post main failed: ' + data.message);
         alert('Listening post main failed: ' + data.error);
-        document.getElementById('message').innerText = `${data.message}: ${data.error}` || 'An unknown error occurred';
+        showErrorPopup()
       }
     } catch (error) {
       alert('Listening post main failed: ' + error.message);
-      document.getElementById('message').innerText = error.message || 'An unknown error occurred';
+      showErrorPopup()
+    }
+    finally {
+      hideLoadingPopup();
     }
   }
 
 
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //Utilites
 // Load profile info
@@ -802,6 +1603,7 @@ async function loadProfile() {
     if (response.ok) {
       document.getElementById('name').value = data.user.name;
       document.getElementById('email').value = data.user.email;
+      document.getElementById('preview').src = `${serverStorage}${data.user.photo}`
     } else {
       alert('Failed to load profile');
     }
@@ -818,3 +1620,204 @@ function getCookie(name) {
   );
   return match ? match[2] : '';
 }
+
+//Beginning request
+function showLoadingPopup(message = `⏳ Loading...`) {
+  const popup = document.createElement("div");
+  popup.innerText = message;
+  popup.id = "loading-popup";
+  popup.style.position = "fixed";
+  popup.style.top = "20px";
+  popup.style.right = "20px";
+  popup.style.background = "#333";
+  popup.style.color = "#fff";
+  popup.style.padding = "10px 15px";
+  popup.style.borderRadius = "5px";
+  popup.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  popup.style.fontSize = "16px";
+  popup.style.zIndex = "9999";
+  popup.style.opacity = "1";
+  popup.style.transition = "opacity 0.3s ease-out";
+  popup.style.pointerEvents = "none";
+  popup.className = 'popup'
+
+  document.querySelectorAll('.popup').forEach(el => el.remove());
+  if (!document.getElementById("loading-popup")) {
+    document.body.appendChild(popup);
+  }
+}
+function hideLoadingPopup() {
+  const popup = document.getElementById("loading-popup");
+  if (popup) {
+    popup.style.opacity = "0";
+    setTimeout(() => {
+      if (popup.parentNode) {
+        popup.parentNode.removeChild(popup);
+      }
+    }, 300);
+  }
+}
+function showErrorPopup(message = "💣 Error occurred!") {
+  const popup = document.createElement("div");
+  popup.innerText = message;
+  popup.style.position = "fixed";
+  popup.style.top = "20px";
+  popup.style.right = "20px";
+  popup.style.background = "#f44336"; // red background
+  popup.style.color = "#fff";
+  popup.style.padding = "10px 15px";
+  popup.style.borderRadius = "5px";
+  popup.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  popup.style.fontSize = "16px";
+  popup.style.zIndex = "9999";
+  popup.style.opacity = "1";
+  popup.style.transition = "opacity 1s ease-out";
+  popup.style.pointerEvents = "none";
+  popup.className = 'popup'
+
+  document.querySelectorAll('.popup').forEach(el => el.remove());
+  document.body.appendChild(popup);
+
+  // Fade out after 1.5 seconds
+  setTimeout(() => {
+    popup.style.opacity = "0";
+    setTimeout(() => {
+      if (popup.parentNode) {
+        popup.parentNode.removeChild(popup);
+      }
+    }, 1000);
+  }, 1500);
+}
+function showSuccessPopup(message = "✅ Success!") {
+  const popup = document.createElement("div");
+  popup.innerText = message;
+  popup.style.position = "fixed";
+  popup.style.top = "20px";
+  popup.style.right = "20px";
+  popup.style.background = "#4caf50"; // green background
+  popup.style.color = "#fff";
+  popup.style.padding = "10px 15px";
+  popup.style.borderRadius = "5px";
+  popup.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  popup.style.fontSize = "16px";
+  popup.style.zIndex = "9999";
+  popup.style.opacity = "1";
+  popup.style.transition = "opacity 1s ease-out";
+  popup.style.pointerEvents = "none";
+  popup.className = 'popup'
+
+
+  document.querySelectorAll('.popup').forEach(el => el.remove());
+  document.body.appendChild(popup);
+
+  // Fade out after 1.5 seconds
+  setTimeout(() => {
+    popup.style.opacity = "0";
+    setTimeout(() => {
+      if (popup.parentNode) {
+        popup.parentNode.removeChild(popup);
+      }
+    }, 1000);
+  }, 1500);
+}
+
+function showFormattedPopup() {
+  const popup = document.createElement("div");
+  popup.innerText = "🖊 Formatted!";
+  popup.style.position = "fixed";
+  popup.style.top = "20px";
+  popup.style.right = "20px";
+  popup.style.background = "#4caf50";
+  popup.style.color = "#fff";
+  popup.style.padding = "10px 15px";
+  popup.style.borderRadius = "5px";
+  popup.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  popup.style.fontSize = "16px";
+  popup.style.zIndex = "9999";
+  popup.style.opacity = "1";
+  popup.style.transition = "opacity 1s ease-out";
+  popup.style.pointerEvents = "none";
+  popup.className = 'popup'
+
+  document.querySelectorAll('.popup').forEach(el => el.remove());
+
+  document.body.appendChild(popup);
+
+  // Fade out after 1.5 seconds
+  setTimeout(() => {
+    popup.style.opacity = "0";
+    setTimeout(() => document.body.removeChild(popup), 1000);
+  }, 1500);
+}
+
+function showCopyPopup() {
+  const popup = document.createElement("div");
+  popup.innerText = "📋 Copied!";
+  popup.style.position = "fixed";
+  popup.style.top = "20px";
+  popup.style.right = "20px";
+  popup.style.background = "#4caf50";
+  popup.style.color = "#fff";
+  popup.style.padding = "10px 15px";
+  popup.style.borderRadius = "5px";
+  popup.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  popup.style.fontSize = "16px";
+  popup.style.zIndex = "9999";
+  popup.style.opacity = "1";
+  popup.style.transition = "opacity 1s ease-out";
+  popup.style.pointerEvents = "none";
+  popup.className = 'popup'
+
+  document.querySelectorAll('.popup').forEach(el => el.remove());
+  document.body.appendChild(popup);
+
+  // Fade out after 1.5 seconds
+  setTimeout(() => {
+    popup.style.opacity = "0";
+    setTimeout(() => document.body.removeChild(popup), 1000);
+  }, 1500);
+}
+
+function convertVisibleComments() {
+  const editor = window.jsEditor;
+  const code = editor.state.doc.toString();
+
+  //\n Separate considering TAB/lines
+  const updatedCode = code.split('\n').map(line => {
+
+    const trimmedLine = line.trimStart();
+
+    // Skip line if it already has a block comment
+    if (trimmedLine.includes('/*') && trimmedLine.includes('*/')) {
+      return line;
+    }
+
+    // Convert // comments at the end of a line
+    const commentIndex = line.indexOf('//');
+    if (commentIndex !== -1) {
+      const codePart = line.slice(0, commentIndex).trimEnd();
+      const commentPart = line.slice(commentIndex).trim();
+      return `${codePart} /*${commentPart}*/`;
+    }
+
+    return line;
+  }).join('\n');
+
+  editor.dispatch({
+    changes: {
+      from: 0,
+      to: editor.state.doc.length,
+      insert: updatedCode
+    }
+  });
+}
+
+
+
+
+
+
+
+
+
+

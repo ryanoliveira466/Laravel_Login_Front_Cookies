@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
+    <title>Create</title>
     <style>
         /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -237,14 +237,14 @@
 <body>
 
 
-    <div id="edit"></div>
+    <div id="create"></div>
 
     <form id="editForm" style="display: flex; flex-direction: column;" class="visually-hidden">
-        <input type="text" id="projectNameForm" placeholder="Name:" required>
-        <input type="text" id="projectDescriptionForm" placeholder="Description:" required>
-        <input type="text" id="javascriptForm" placeholder="Javascript:" required>
-        <input type="text" id="cssForm" placeholder="CSS:" required>
-        <input type="text" id="htmlForm" placeholder="HTML:" required>
+        <input type="text" id="projectNameForm" placeholder="Name:">
+        <input type="text" id="projectDescriptionForm" placeholder="Description:">
+        <input type="text" id="javascriptForm" placeholder="Javascript:">
+        <input type="text" id="cssForm" placeholder="CSS:">
+        <input type="text" id="htmlForm" placeholder="HTML:">
         <button type="submit" id="submitForm">Save edit</button>
     </form>
 
@@ -306,8 +306,7 @@
           "></textarea>
 
             <textarea id="projectDescription" rows="6" placeholder="Write your project description..."
-                style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; resize: none; max-height: 200px;">
-            </textarea>
+                style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; resize: none; max-height: 200px;"></textarea>
         </div>
 
         <button class="btn btn" id="closeDescription"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Playground</title>
     <style>
         /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -216,38 +216,18 @@
             }
         }
 
-        .transitionAll {
+        .transitionAll{
             transition: all 1s ease-in-out;
         }
 
-
-        #projectName:empty:before {
-            content: attr(data-placeholder);
-            color: #aaa;
-        }
-
-        .pt-60{
-            padding-top: 60px !important;
-        }
+        
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+
 </head>
 
 <body>
-
-
-    <div id="edit"></div>
-
-    <form id="editForm" style="display: flex; flex-direction: column;" class="visually-hidden">
-        <input type="text" id="projectNameForm" placeholder="Name:" required>
-        <input type="text" id="projectDescriptionForm" placeholder="Description:" required>
-        <input type="text" id="javascriptForm" placeholder="Javascript:" required>
-        <input type="text" id="cssForm" placeholder="CSS:" required>
-        <input type="text" id="htmlForm" placeholder="HTML:" required>
-        <button type="submit" id="submitForm">Save edit</button>
-    </form>
-
 
     <!-- background -->
     <div class="position-fixed top-0 start-0 z-n1 w-100 h-100">
@@ -262,17 +242,14 @@
 
     <!-- about -->
     <div class="position-fixed transitionAll top-0 bottom-0 overflow-auto vw-100 vh-100 z-2 justify-content-center flex-column align-items-center"
-        style="display: flex;pointer-events: none; backdrop-filter: blur(10px); opacity: 0; background-color: rgba(0, 0, 0, 0.5);"
-        id="about">
+        style="display: flex;pointer-events: none; backdrop-filter: blur(10px); opacity: 0; background-color: rgba(0, 0, 0, 0.5);" id="about">
 
         <h1 class="text-light">Author</h1>
         <div class="img-thumbnail" style="width: 300px; height: 300px;">
-            <img src="" id="imageProfile" class="w-100 h-100 object-fit-cover" alt="" srcset="">
+            <img src="img/peep.webp" class="w-100 h-100 object-fit-cover" alt="" srcset="">
         </div>
 
-        <a class="nav-link text-light text-center" id="userLinkProfile" href="">
-            <p id="nameUserProfile"></p>
-        </a>
+        <a class="nav-link text-light text-center" href="member.html?slug=gustav-elijah-23dHhsa">Gustav Elijah Ahr</a>
 
 
         <button class="btn btn" id="closeAbout"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
@@ -280,42 +257,6 @@
                 <path
                     d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
             </svg></button>
-    </div>
-
-    <!-- description -->
-    <div class="position-fixed transitionAll top-0 bottom-0 overflow-auto vw-100 vh-100 z-2 justify-content-center flex-column align-items-center"
-        style="display: flex;pointer-events: none; backdrop-filter: blur(10px); opacity: 0; background-color: rgba(0, 0, 0, 0.5);"
-        id="description">
-
-        <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 600px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeInUp 0.5s ease-out;"
-            class="text-center">
-            <textarea id="projectName"
-          rows="1"
-          placeholder="Enter project name"
-          style="
-            width: 100%;
-            font-size: 2em;
-            font-weight: bold;
-            border: none;
-            outline: none;
-            resize: none;
-            color: #333;
-            margin-bottom: 1rem;
-            overflow-y: auto;
-            background: transparent;
-          "></textarea>
-
-            <textarea id="projectDescription" rows="6" placeholder="Write your project description..."
-                style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; resize: none; max-height: 200px;">
-            </textarea>
-        </div>
-
-        <button class="btn btn" id="closeDescription"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
-                fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
-                <path
-                    d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-            </svg></button>
-
     </div>
 
 
@@ -361,37 +302,12 @@
                                 </svg></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="save">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="greenyellow" class="bi bi-floppy-fill" viewBox="0 0 16 16">
-                                    <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5H14v-5.5A1.5 1.5 0 0 0 12.5 9h-9A1.5 1.5 0 0 0 2 10.5V16h-.5A1.5 1.5 0 0 1 0 14.5z"/>
-                                    <path d="M3 16h10v-5.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5zm9-16H4v5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5zM9 1h2v4H9z"/>
-                                  </svg>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="formatter" href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-vector-pen" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M10.646.646a.5.5 0 0 1 .708 0l4 4a.5.5 0 0 1 0 .708l-1.902 1.902-.829 3.313a1.5 1.5 0 0 1-1.024 1.073L1.254 14.746 4.358 4.4A1.5 1.5 0 0 1 5.43 3.377l3.313-.828zm-1.8 2.908-3.173.793a.5.5 0 0 0-.358.342l-2.57 8.565 8.567-2.57a.5.5 0 0 0 .34-.357l.794-3.174-3.6-3.6z" />
-                                    <path fill-rule="evenodd"
-                                        d="M2.832 13.228 8 9a1 1 0 1 0-1-1l-4.228 5.168-.026.086z" />
-                                </svg>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="expand" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                    height="16" fill="currentColor" class="bi bi-arrows-angle-expand"
-                                    viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707" />
-                                </svg></a>
+                            <a class="nav-link" id="expand" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707"/>
+                              </svg></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" id="aboutLink">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="descriptionLink">Description</a>
                         </li>
                     </ul>
                     <form class="d-flex" role="search">
@@ -410,17 +326,7 @@
                     <div style="max-height: 50vh;">
                         <!-- ** -->
                         <section id="javascript" class="pt-1">
-                            <h2 class="m-2"><svg xmlns="http://www.w3.org/2000/svg" aria-label="JavaScript" role="img"
-                                    viewBox="0 0 512 512" width="64px" height="64px" fill="#000000">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <rect width="512" height="512" rx="15%" fill="#f7df1e"></rect>
-                                        <path
-                                            d="M324 370c10 17 24 29 47 29c20 0 33-10 33 -24c0-16 -13 -22 -35 -32l-12-5c-35-15 -58 -33 -58 -72c0-36 27 -64 70 -64c31 0 53 11 68 39l-37 24c-8-15 -17 -21 -31 -21c-14 0-23 9 -23 21c0 14 9 20 30 29l12 5c41 18 64 35 64 76c0 43-34 67 -80 67c-45 0-74 -21 -88 -49zm-170 4c8 13 14 25 31 25c16 0 26-6 26 -30V203h48v164c0 50-29 72 -72 72c-39 0-61 -20 -72 -44z">
-                                        </path>
-                                    </g>
-                                </svg></h2>
+                            <h2 class="m-2"><svg xmlns="http://www.w3.org/2000/svg" aria-label="JavaScript" role="img" viewBox="0 0 512 512" width="64px" height="64px" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><rect width="512" height="512" rx="15%" fill="#f7df1e"></rect><path d="M324 370c10 17 24 29 47 29c20 0 33-10 33 -24c0-16 -13 -22 -35 -32l-12-5c-35-15 -58 -33 -58 -72c0-36 27 -64 70 -64c31 0 53 11 68 39l-37 24c-8-15 -17 -21 -31 -21c-14 0-23 9 -23 21c0 14 9 20 30 29l12 5c41 18 64 35 64 76c0 43-34 67 -80 67c-45 0-74 -21 -88 -49zm-170 4c8 13 14 25 31 25c16 0 26-6 26 -30V203h48v164c0 50-29 72 -72 72c-39 0-61 -20 -72 -44z"></path></g></svg></h2>
                             <div style="max-height: 500px;" class="overflow-auto shadow m-2">
                                 <div id="js-editor" class="editor"></div>
                             </div>
@@ -437,8 +343,7 @@
 
                         <!-- ** -->
                         <section id="css" class="pt-1">
-                            <h2 class="m-2"><img src="https://img.icons8.com/?size=64&id=1044&format=png&color=339AF0"
-                                    alt="" srcset=""></h2>
+                            <h2 class="m-2"><img src="https://img.icons8.com/?size=64&id=1044&format=png&color=339AF0" alt="" srcset=""></h2>
                             <div style="max-height: 500px;" class="overflow-auto shadow m-2">
                                 <div id="css-editor" class="editor"></div>
                             </div>
@@ -455,20 +360,7 @@
 
                         <!-- ** -->
                         <section id="html" class="pt-1">
-                            <h2 class="m-2"><svg style="border-radius: 13px;" height="64px" width="64px" version="1.1"
-                                    id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 15.332 15.332"
-                                    xml:space="preserve" fill="#000000">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <g>
-                                            <path style="fill: #FA8072;"
-                                                d="M14.395,0H0.938C0.419,0,0,0.42,0,0.938v13.455c0,0.52,0.42,0.939,0.938,0.939h13.456 c0.519,0,0.938-0.42,0.938-0.939V0.938C15.333,0.42,14.913,0,14.395,0z M4.463,9.427H3.669V7.955H2.357v1.472H1.558V5.906h0.799 V7.26h1.312V5.906h0.794V9.427z M7.6,6.574H6.639v2.853h-0.8V6.574H4.893V5.906H7.6C7.6,5.906,7.6,6.574,7.6,6.574z M11.034,9.427 L10.982,8.08c-0.016-0.424-0.031-0.936-0.031-1.447h-0.015c-0.11,0.449-0.257,0.951-0.393,1.363l-0.429,1.375H9.493L9.116,8.007 C9.001,7.594,8.881,7.092,8.798,6.633H8.787C8.766,7.108,8.751,7.652,8.724,8.09L8.661,9.427H7.924l0.225-3.521h1.062l0.345,1.176 c0.109,0.407,0.22,0.846,0.298,1.259H9.87c0.1-0.408,0.22-0.873,0.334-1.265l0.377-1.17h1.04l0.193,3.521 C11.814,9.427,11.034,9.427,11.034,9.427z M14.626,9.427h-2.2V5.906h0.8V8.76h1.4C14.626,8.76,14.626,9.427,14.626,9.427z">
-                                            </path>
-                                        </g>
-                                    </g>
-                                </svg></h2>
+                            <h2 class="m-2"><svg style="border-radius: 13px;" height="64px" width="64px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 15.332 15.332" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path style="fill: #FA8072;" d="M14.395,0H0.938C0.419,0,0,0.42,0,0.938v13.455c0,0.52,0.42,0.939,0.938,0.939h13.456 c0.519,0,0.938-0.42,0.938-0.939V0.938C15.333,0.42,14.913,0,14.395,0z M4.463,9.427H3.669V7.955H2.357v1.472H1.558V5.906h0.799 V7.26h1.312V5.906h0.794V9.427z M7.6,6.574H6.639v2.853h-0.8V6.574H4.893V5.906H7.6C7.6,5.906,7.6,6.574,7.6,6.574z M11.034,9.427 L10.982,8.08c-0.016-0.424-0.031-0.936-0.031-1.447h-0.015c-0.11,0.449-0.257,0.951-0.393,1.363l-0.429,1.375H9.493L9.116,8.007 C9.001,7.594,8.881,7.092,8.798,6.633H8.787C8.766,7.108,8.751,7.652,8.724,8.09L8.661,9.427H7.924l0.225-3.521h1.062l0.345,1.176 c0.109,0.407,0.22,0.846,0.298,1.259H9.87c0.1-0.408,0.22-0.873,0.334-1.265l0.377-1.17h1.04l0.193,3.521 C11.814,9.427,11.034,9.427,11.034,9.427z M14.626,9.427h-2.2V5.906h0.8V8.76h1.4C14.626,8.76,14.626,9.427,14.626,9.427z"></path> </g> </g></svg></h2>
                             <div style="max-height: 500px;" class="overflow-auto shadow m-2">
                                 <div id="html-editor" class="editor"></div>
                             </div>
@@ -485,10 +377,8 @@
                     </div>
 
                 </div>
-                <iframe id="iframeA"
-                    class="w-100 h-50 containter-fluid position-fixed start-0 top-50 transitionAll"></iframe>
-                <iframe id="iframeB"
-                    class="w-100 h-50 containter-fluid position-fixed start-0 top-50 transitionAll"></iframe>
+                <iframe id="iframeA" class="w-100 h-50 containter-fluid position-fixed start-0 top-50 transitionAll"></iframe>
+                <iframe id="iframeB" class="w-100 h-50 containter-fluid position-fixed start-0 top-50 transitionAll"></iframe>
             </article>
         </section>
     </main>
@@ -496,14 +386,11 @@
     <footer class="d-none"></footer>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.9/js/lib/beautify.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.9/js/lib/beautify-html.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.9/js/lib/beautify-css.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
         crossorigin="anonymous"></script>
-    <script src="app.js" type="module"></script>
+    <script src="playground.js" type="module"></script>
 </body>
 
 </html>
