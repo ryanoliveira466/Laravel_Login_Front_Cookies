@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
+    <title>Create</title>
     <style>
         /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -237,14 +237,14 @@
 <body>
 
 
-    <div id="edit"></div>
+    <div id="create"></div>
 
     <form id="editForm" style="display: flex; flex-direction: column;" class="visually-hidden">
-        <input type="text" id="projectNameForm" placeholder="Name:" required>
-        <input type="text" id="projectDescriptionForm" placeholder="Description:" required>
-        <input type="text" id="javascriptForm" placeholder="Javascript:" required>
-        <input type="text" id="cssForm" placeholder="CSS:" required>
-        <input type="text" id="htmlForm" placeholder="HTML:" required>
+        <input type="text" id="projectNameForm" placeholder="Name:">
+        <input type="text" id="projectDescriptionForm" placeholder="Description:">
+        <input type="text" id="javascriptForm" placeholder="Javascript:">
+        <input type="text" id="cssForm" placeholder="CSS:">
+        <input type="text" id="htmlForm" placeholder="HTML:">
         <input type="text" id="photoForm" placeholder="Photo:">
         <button type="submit" id="submitForm">Save edit</button>
     </form>
@@ -267,6 +267,7 @@
         id="about">
 
         <div class="w-100 vh-50 d-flex align-items-center flex-column overflow-y-auto">
+
             <h1 class="text-light">Author</h1>
             <div class="img-thumbnail" style="width: 300px; height: 300px;">
                 <img src="" id="imageProfile" class="w-100 h-100 object-fit-cover" alt="" srcset="">
@@ -284,7 +285,6 @@
                 </svg></button>
         </div>
 
-
     </div>
 
     <!-- description -->
@@ -293,7 +293,7 @@
         id="description">
 
         <div class="w-100 vh-50 d-flex align-items-center flex-column overflow-y-auto">
-            <div style="background: white; margin:0.5rem; padding: 2rem; border-radius: 12px; max-width: 600px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeInUp 0.5s ease-out;"
+            <div style="background: white; padding: 2rem;margin:0.5rem; border-radius: 12px; max-width: 600px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeInUp 0.5s ease-out;"
                 class="text-center">
                 <textarea id="projectName" rows="1" placeholder="Enter project name" style="
             width: 100%;
@@ -309,8 +309,7 @@
           "></textarea>
 
                 <textarea id="projectDescription" rows="6" placeholder="Write your project description..."
-                    style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; resize: none; max-height: 200px;">
-            </textarea>
+                    style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; resize: none; max-height: 200px;"></textarea>
             </div>
 
             <button class="btn btn" id="closeDescription"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
@@ -319,7 +318,6 @@
                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                 </svg></button>
         </div>
-
 
     </div>
 
@@ -332,19 +330,18 @@
             <h1 class="text-light">Thumbnail</h1>
             <div id="imagePreview" style="height: auto; max-width: 600px; width: 90%;"
                 class="d-flex justify-content-center align-items-center text-center">
-                <img src="" id="cover" class="object-fit-cover w-100 h-100 rounded" alt="" srcset="">
+                <img src="img/default-cover-A7fK9x.jpg" id="cover" class="object-fit-cover w-100 h-100 rounded" alt=""
+                    srcset="">
             </div>
 
             <input type="file" id="fileInput" accept="image/*" style="display: none;" />
 
-            <label for="fileInput" style="margin: 0.5rem;
-              display: inline-block; 
-              padding: 10px 20px; 
-              background: #007bff; 
-              color: #fff; 
-              cursor: pointer; 
-              border-radius: 5px;
-            ">
+            <label for="fileInput" class="bg-primary text-white" style="margin: 0.5rem;
+          display: inline-block; 
+          padding: 10px 20px; 
+          cursor: pointer; 
+          border-radius: 5px;
+        ">
                 Choose an image
             </label>
 
@@ -353,9 +350,7 @@
                     <path
                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                 </svg></button>
-
         </div>
-
 
     </div>
 
