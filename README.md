@@ -39,7 +39,7 @@
 * Created seeders for auto table fill when testing users an functions. [https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/03-05-2025-tableComponents-posts.txt]
 
 
-04&05/05/2025
+04/05/2025 & 05/05/2025
 * Creating playground for front[https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/04%2605-05-2025-playground.txt]
 
 06/05/2025
@@ -53,7 +53,7 @@
 *Project, create, and edit
 [https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/07-05-2025-js-beautifyBug.txt]
 
-10/05/2025 && 11/05/2025
+10/05/2025 & 11/05/2025
 *Member page is being stylized
 
 17/05/25
