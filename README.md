@@ -53,7 +53,7 @@
 *Project, create, and edit
 [https://github.com/ryanoliveira466/Laravel_Login_Front_Cookies/blob/main/Notes_Att/07-05-2025-js-beautifyBug.txt]
 
-10/05/2025
+10/05/2025 && 11/05/2025
 *Member page is being stylized
 
 17/05/25
