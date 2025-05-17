@@ -55,3 +55,6 @@
 
 10/05/2025
 *Member page is being stylized
+
+17/05/25
+Fixed some bugs, Member page is being stylized,projects search
