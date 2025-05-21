@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
+    <title>Create</title>
     <style>
         /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -236,14 +236,14 @@
 <body>
 
 
-    <div id="edit"></div>
+    <div id="create"></div>
 
     <form id="editForm" style="display: flex; flex-direction: column;" class="visually-hidden">
-        <input type="text" id="projectNameForm" placeholder="Name:" required>
-        <input type="text" id="projectDescriptionForm" placeholder="Description:" required>
-        <input type="text" id="javascriptForm" placeholder="Javascript:" required>
-        <input type="text" id="cssForm" placeholder="CSS:" required>
-        <input type="text" id="htmlForm" placeholder="HTML:" required>
+        <input type="text" id="projectNameForm" placeholder="Name:">
+        <input type="text" id="projectDescriptionForm" placeholder="Description:">
+        <input type="text" id="javascriptForm" placeholder="Javascript:">
+        <input type="text" id="cssForm" placeholder="CSS:">
+        <input type="text" id="htmlForm" placeholder="HTML:">
         <input type="text" id="photoForm" placeholder="Photo:">
         <button type="submit" id="submitForm">Save edit</button>
     </form>
@@ -266,6 +266,7 @@
         id="about">
 
         <div class="w-100 vh-50 d-flex align-items-center flex-column overflow-y-auto">
+
             <h1 class="text-light">Author</h1>
             <div class="img-thumbnail" style="width: 300px; height: 300px;">
                 <img src="" id="imageProfile" class="w-100 h-100 object-fit-cover d-none" alt="" srcset="">
@@ -286,7 +287,6 @@
                 </svg></button>
         </div>
 
-
     </div>
 
     <!-- description -->
@@ -295,9 +295,9 @@
         id="description">
 
         <div class="w-100 vh-50 d-flex align-items-center flex-column overflow-y-auto">
-            <div style="background: white; margin:0.5rem; padding: 2rem; border-radius: 12px; max-width: 600px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeInUp 0.5s ease-out;"
+            <div style="background: white; padding: 2rem;margin:0.5rem; border-radius: 12px; max-width: 600px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeInUp 0.5s ease-out;"
                 class="text-center">
-                <textarea id="projectName" rows="1" placeholder="..." style="
+                <textarea id="projectName" rows="1" placeholder="Enter project name" style="
             width: 100%;
             font-size: 2em;
             font-weight: bold;
@@ -311,8 +311,7 @@
           "></textarea>
 
                 <textarea id="projectDescription" rows="6" placeholder="Write your project description..."
-                    style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; resize: none; max-height: 200px;">
-            </textarea>
+                    style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; resize: none; max-height: 200px;"></textarea>
             </div>
 
             <button class="btn btn-danger m-1" id="closeDescription"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
@@ -321,7 +320,6 @@
                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                 </svg></button>
         </div>
-
 
     </div>
 
@@ -334,10 +332,8 @@
             <h1 class="text-light">Thumbnail</h1>
             <div id="imagePreview" style="height: auto; max-width: 600px; width: 90%;"
                 class="d-flex justify-content-center align-items-center text-center">
-                <img src="" id="cover" class="object-fit-cover w-100 h-100 rounded d-none" alt="" srcset="">
-                <div class="placeholder-glow w-100 h-100 loading-placeholder">
-                    <span class="placeholder w-100 h-100 rounded"></span>
-                </div>
+                <img src="img/default-cover-A7fK9x.jpg" id="cover" class="object-fit-cover w-100 h-100 rounded" alt=""
+                    srcset="">
             </div>
 
             <input type="file" id="fileInput" accept="image/*" style="display: none;" />
@@ -351,9 +347,7 @@
                     <path
                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                 </svg></button>
-
         </div>
-
 
     </div>
 
@@ -461,11 +455,12 @@
                                             d="M324 370c10 17 24 29 47 29c20 0 33-10 33 -24c0-16 -13 -22 -35 -32l-12-5c-35-15 -58 -33 -58 -72c0-36 27 -64 70 -64c31 0 53 11 68 39l-37 24c-8-15 -17 -21 -31 -21c-14 0-23 9 -23 21c0 14 9 20 30 29l12 5c41 18 64 35 64 76c0 43-34 67 -80 67c-45 0-74 -21 -88 -49zm-170 4c8 13 14 25 31 25c16 0 26-6 26 -30V203h48v164c0 50-29 72 -72 72c-39 0-61 -20 -72 -44z">
                                         </path>
                                     </g>
-                                </svg></h2>
-                                <label class="m-2">
-                                    <input type="checkbox" id="useModule"/>
-                                    Run JavaScript as <code>&lt;script type="module"&gt;</code>
-                                </label>
+                                </svg>
+                            </h2>
+                            <label class="m-2">
+                                <input type="checkbox" id="useModule"/>
+                                Run JavaScript as <code>&lt;script type="module"&gt;</code>
+                            </label>
                             <div style="max-height: 500px;" class="overflow-auto shadow m-2">
                                 <div id="js-editor" class="editor"></div>
                             </div>
@@ -530,13 +525,10 @@
                     </div>
 
                 </div>
-                <div class="placeholder-glow w-100 h-50 position-fixed start-0 top-50 transitionAll loading-placeholder">
-                    <span class="placeholder w-100 h-100"></span>
-                </div>
                 <iframe id="iframeA"
-                    class="w-100 h-50 position-fixed start-0 top-50 transitionAll d-none"></iframe>
+                    class="w-100 h-50 position-fixed start-0 top-50 transitionAll"></iframe>
                 <iframe id="iframeB"
-                    class="w-100 h-50 position-fixed start-0 top-50 transitionAll d-none"></iframe>
+                    class="w-100 h-50 position-fixed start-0 top-50 transitionAll"></iframe>
             </article>
         </section>
     </main>
