@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit</title>
+    <title>Create</title>
     <style>
         /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -96,6 +96,7 @@
             padding: 0;
             border: 0;
             font-size: 100%;
+            /* Markdown text
             /* font: inherit; */
             vertical-align: baseline;
         }
@@ -118,6 +119,8 @@
         body {
             line-height: 1;
         }
+
+        /*Markdown list
 
         /* ol,
         ul {
@@ -229,8 +232,44 @@
             padding-top: 60px !important;
         }
 
-           /* Target elements with scrollbars (e.g. div, body, etc.) */
-           .scrollbar-thin::-webkit-scrollbar {
+        .markdown-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .markdown-toolbar button {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+
+        .markdown-toolbar button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .markdown-toolbar button:active {
+            background-color: #d0d0d0;
+        }
+
+        .markdown-toolbar button span {
+            margin-left: 4px;
+        }
+
+
+        #markdown-preview blockquote {
+            border-left: 4px solid #ccc;
+            margin: 1em 0;
+            padding: 0.5em 1em;
+        }
+
+        /* Target elements with scrollbars (e.g. div, body, etc.) */
+        .scrollbar-thin::-webkit-scrollbar {
             width: 6px;
             /* vertical scrollbar width */
             height: 6px;
@@ -252,22 +291,33 @@
             background-color: rgba(0, 0, 0, 0.5);
             /* darker on hover */
         }
+
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cm-scroller::-webkit-scrollbar {
+            display: none !important;
+        }
     </style>
+
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
 
-<body>
+<body >
 
 
-    <div id="edit"></div>
+    <div id="create"></div>
 
     <form id="editForm" style="display: flex; flex-direction: column;" class="visually-hidden">
-        <input type="text" id="projectNameForm" placeholder="Name:" required>
-        <input type="text" id="projectDescriptionForm" placeholder="Description:" required>
-        <input type="text" id="javascriptForm" placeholder="Javascript:" required>
-        <input type="text" id="cssForm" placeholder="CSS:" required>
-        <input type="text" id="htmlForm" placeholder="HTML:" required>
+        <input type="text" id="projectNameForm" placeholder="Name:">
+        <input type="text" id="projectDescriptionForm" placeholder="Description:">
+        <input type="text" id="javascriptForm" placeholder="Javascript:">
+        <input type="text" id="cssForm" placeholder="CSS:">
+        <input type="text" id="htmlForm" placeholder="HTML:">
         <input type="text" id="photoForm" placeholder="Photo:">
         <button type="submit" id="submitForm">Save edit</button>
     </form>
@@ -282,16 +332,15 @@
         <div class="line" style="left: 40%; animation-delay: 1.5s;"></div>
         <div class="line" style="left: 70%; animation-delay: 3s;"></div>
         <div class="square" style="left: 90%; animation-delay: 5s;"></div>
-    </div>
+    </div> 
 
     <!-- about -->
-    <div class="position-fixed transitionAll top-0 bottom-0 overflow-auto vw-100 vh-100 z-2 justify-content-center flex-column align-items-center"
-        style="display: flex;pointer-events: none; backdrop-filter: blur(10px); opacity: 0; background-color: rgba(0, 0, 0, 0.5);"
-        id="about">
+    <div class="position-fixed bg-dark top-0 bottom-0 overflow-auto vw-100 vh-100 z-2 justify-content-center flex-column align-items-center"
+        style="display: flex;pointer-events: none; opacity: 0;" id="about">
 
         <div class="w-100 vh-50 d-flex align-items-center flex-column overflow-y-auto">
-            <h1 class="text-light">Author</h1>
-            <div class="img-thumbnail" style="width: 300px; height: 300px;">
+
+            <div class="img-thumbnail m-2" style="width: 300px; height: 300px;">
                 <img src="" id="imageProfile" class="w-100 h-100 object-fit-cover d-none" alt="" srcset="">
                 <div class="placeholder-glow w-100 h-100 loading-placeholder">
                     <span class="placeholder w-100 h-100"></span>
@@ -303,81 +352,132 @@
             </a>
 
 
-            <button class="btn btn-danger m-1" id="closeAbout"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
-                    fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <button class="btn btn-danger m-1" id="closeAbout"><svg xmlns="http://www.w3.org/2000/svg" width="40"
+                    height="40" fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
                     <path
                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                 </svg></button>
         </div>
-
 
     </div>
 
     <!-- description -->
-    <div class="position-fixed transitionAll top-0 bottom-0 overflow-auto vw-100 vh-100 z-2 justify-content-center flex-column align-items-center"
-        style="display: flex;pointer-events: none; backdrop-filter: blur(10px); opacity: 0; background-color: rgba(0, 0, 0, 0.5);"
-        id="description">
+    <div class="bg-dark" style="position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+    padding: 2rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+    opacity: 0;
+    pointer-events: none;" id="description">
 
-        <div class="w-100 vh-50 d-flex align-items-center flex-column overflow-y-auto">
-            <div style="background: white; margin:0.5rem; padding: 2rem; border-radius: 12px; max-width: 600px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeInUp 0.5s ease-out;"
-                class="text-center">
-                <textarea id="projectName" rows="1" placeholder="..." style="
-            width: 100%;
-            font-size: 2em;
-            font-weight: bold;
-            border: none;
-            outline: none;
-            resize: none;
-            color: #333;
-            margin-bottom: 1rem;
-            overflow-y: auto;
-            background: transparent;
-          "></textarea>
+       
 
-                <textarea id="projectDescription" rows="6" placeholder="Write your project description..."
-                    style="width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; resize: none; max-height: 200px;">
-            </textarea>
-            </div>
-
-            <button class="btn btn-danger m-1" id="closeDescription"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
-                    fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
+        <div style="display: flex; flex-direction: column; gap: 2rem; flex-wrap: wrap; align-items: center;" class="mb-auto mt-auto w-100">
+            <button class="btn btn-danger m-1" id="closeDescription">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-x-lg"
+                    viewBox="0 0 16 16">
                     <path
                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                </svg></button>
-        </div>
+                </svg>
+            </button>
 
+            <div class="" id="markdown-create">
+                <div style="background: white; padding: 2rem;margin:0.5rem; border-radius: 12px; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeInUp 0.5s ease-out;"
+                    class="text-center">
+                    <textarea id="projectName" rows="1" placeholder="Enter project name"
+                        style="width: 100%; font-size: 2em; font-weight: bold; border: none; outline: none; resize: none; color: #333; margin-bottom: 1rem; overflow-y: auto; background: transparent;"></textarea>
 
-    </div>
+                    <!-- Toolbar -->
+                    <div class="markdown-toolbar">
+                        <button onclick="insert('# ', '')">🔠 <span>H1</span></button>
+                        <button onclick="insert('## ', '')">🔡 <span>H2</span></button>
+                        <button onclick="insert('###### ', '')">🔤 <span>H6</span></button>
 
-    <!-- photo -->
-    <div class="position-fixed transitionAll top-0 bottom-0 overflow-auto vw-100 vh-100 z-2 justify-content-center flex-column align-items-center"
-        style="display: flex;pointer-events: none; backdrop-filter: blur(10px); opacity: 0; background-color: rgba(0, 0, 0, 0.5);"
-        id="photo">
+                        <button onclick="insert('*', '*')">𝘪 <span>Italic</span></button>
+                        <button onclick="insert('**', '**')">𝐁 <span>Bold</span></button>
+                        <button onclick="insert('`', '`')">💻 <span>Inline Code</span></button>
+                        <button onclick="insertBlockCode()">📄 <span>Code Block</span></button>
 
-        <div class="w-100 vh-50 d-flex align-items-center flex-column overflow-y-auto">
-            <h1 class="text-light">Thumbnail</h1>
-            <div id="imagePreview" style="height: auto; max-width: 600px; width: 90%;"
-                class="d-flex justify-content-center align-items-center text-center">
-                <img src="" id="cover" class="object-fit-cover w-100 h-100 rounded d-none" alt="" srcset="">
-                <div class="placeholder-glow w-100 h-100 loading-placeholder">
-                    <span class="placeholder w-100 h-100 rounded"></span>
+                        <button onclick="insert('- ', '')">📝 <span>List</span></button>
+                        <button onclick="insertImageTag()">🖼️ <span>Image</span></button>
+                        <button onclick="insert('[Link Text](', ')')">🔗 <span>Link</span></button>
+                        <button onclick="insert('> ', '')">💬 <span>Quote</span></button>
+                        <button onclick="insertTable()">📊 <span>Table</span></button>
+                    </div>
+
+                    <!-- <div id="projectDescription" class="scrollbar-none"
+                        style="background-color: rgb(32, 31, 31);color: white; width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; max-height: 200px; overflow: scroll; text-align: left;">
+                    </div> -->
+
                 </div>
             </div>
 
-            <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+            <div id="projectDescription" class="scrollbar-none"
+                style="background-color: rgb(32, 31, 31);color: white; max-width: 800px; width: 100%; border: 0.5rem solid #00000000 !important; border-radius: 8px; max-height: 200px; overflow: scroll; text-align: left;">
+            </div>
 
-            <label for="fileInput" class="btn btn-primary" style="margin: 0.5rem;">
-                Choose an image
-            </label>
+            <div class="scrollbar-thin" style="
+            background: transparent;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 500px;
+            overflow-y: auto;">
 
-            <button class="btn btn-danger m-1" id="closePhoto"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
-                    fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
-                    <path
-                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                </svg></button>
-
+                <div id="markdown-preview" class="scrollbar-thin" style="font-size: 0.95rem; color: white;">
+                </div>
+            </div>
         </div>
+    </div>
 
+    <!-- photo -->
+    <div class="bg-dark" style="position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100vw;
+        height: 100vh;
+        color: rgb(0, 0, 0);
+        display: flex;
+        flex-direction: column;
+        z-index: 9999;
+        padding: 2rem;
+        overflow-y: auto;
+        box-sizing: border-box;
+        opacity: 0;
+        pointer-events: none;" id="photo">
+
+
+
+        <div class="w-100 d-flex align-items-center flex-column mb-auto mt-auto">
+            <div class="w-100" style="max-width: 600px;">
+                <button class="btn btn-danger m-1" id="closePhoto"><svg xmlns="http://www.w3.org/2000/svg" width="40"
+                    height="40" fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" /></svg>
+            </button>
+            <label for="fileInput" class="btn btn-primary m-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                    class="bi bi-card-image" viewBox="0 0 16 16">
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                    <path
+                        d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z" />
+                </svg>
+            </label>
+            </div>
+          
+            <div id="imagePreview" style="height: auto; max-width: 600px;margin: 0.5rem;"
+                class="d-flex justify-content-center align-items-center text-center">
+                <img src="img/default-cover-A7fK9x.jpg" id="cover" class="object-fit-cover w-100 h-100 rounded" alt=""
+                    srcset="">
+            </div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+        </div>
 
     </div>
 
@@ -485,11 +585,12 @@
                                             d="M324 370c10 17 24 29 47 29c20 0 33-10 33 -24c0-16 -13 -22 -35 -32l-12-5c-35-15 -58 -33 -58 -72c0-36 27 -64 70 -64c31 0 53 11 68 39l-37 24c-8-15 -17 -21 -31 -21c-14 0-23 9 -23 21c0 14 9 20 30 29l12 5c41 18 64 35 64 76c0 43-34 67 -80 67c-45 0-74 -21 -88 -49zm-170 4c8 13 14 25 31 25c16 0 26-6 26 -30V203h48v164c0 50-29 72 -72 72c-39 0-61 -20 -72 -44z">
                                         </path>
                                     </g>
-                                </svg></h2>
-                                <label class="m-2">
-                                    <input type="checkbox" id="useModule"/>
-                                    Run JavaScript as <code>&lt;script type="module"&gt;</code>
-                                </label>
+                                </svg>
+                            </h2>
+                            <label class="m-2">
+                                <input type="checkbox" id="useModule" />
+                                Run JavaScript as <code>&lt;script type="module"&gt;</code>
+                            </label>
                             <div style="max-height: 500px;" class="overflow-auto shadow m-2">
                                 <div id="js-editor" class="editor"></div>
                             </div>
@@ -554,13 +655,8 @@
                     </div>
 
                 </div>
-                <div class="placeholder-glow w-100 h-50 position-fixed start-0 top-50 transitionAll loading-placeholder">
-                    <span class="placeholder w-100 h-100"></span>
-                </div>
-                <iframe id="iframeA"
-                    class="w-100 h-50 position-fixed start-0 top-50 transitionAll d-none"></iframe>
-                <iframe id="iframeB"
-                    class="w-100 h-50 position-fixed start-0 top-50 transitionAll d-none"></iframe>
+                <iframe id="iframeA" class="w-100 h-50 position-fixed start-0 top-50 transitionAll"></iframe>
+                <iframe id="iframeB" class="w-100 h-50 position-fixed start-0 top-50 transitionAll"></iframe>
             </article>
         </section>
     </main>
@@ -571,6 +667,32 @@
     <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.9/js/lib/beautify.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.9/js/lib/beautify-html.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.9/js/lib/beautify-css.js"></script>
+
+    <!-- Highlight.js Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+
+    <!-- Common Language Modules -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/ruby.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/glsl.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/markdown.min.js"></script>
+
+    <!-- MarkDown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Optional: Sanitize HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.3/dist/purify.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
