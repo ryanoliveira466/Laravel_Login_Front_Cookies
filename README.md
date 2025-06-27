@@ -111,8 +111,9 @@ https://www.youtube.com/watch?v=yXNh70VH47Y.
 * Criar uma pasta chamada ```photos``` em ```'storage/app/public/'``` e colocar o arquivo default-user.jpg
 * 
 * No arquivo ```AuthController```
+ <p style="color: red"> && $request->user()->photo != 'photos/default-user.jpg'</p>
 ```php
-if ($request->user()->photo && Storage::disk('public')->exists($request->user()->photo) && $request->user()->photo <p style="color: red">!= 'photos/default-user.jpg'</p>") {
+if ($request->user()->photo && Storage::disk('public')->exists($request->user()->photo) && $request->user()->photo != 'photos/default-user.jpg') {
 Storage::disk('public')->delete($request->user()->photo);
 }
 ```
