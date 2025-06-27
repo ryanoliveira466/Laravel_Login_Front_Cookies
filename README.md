@@ -108,7 +108,14 @@ Obs: As pastas tem que estar **SEPARADAS**, não podemos misturar as duas.
 * Mude a porta do servidor do LivePreview do VScode para 5501(era pra ser a padrão 5500 mas por algum motivo no meu PC ele mudou), mais fácil em vez de mudar o JS em cada linha.
 https://www.youtube.com/watch?v=yXNh70VH47Y.
 
-* Na pasta ```'storage/app/public/photos'``` colocar o arquivo default-user.jpg depois de atualizar a foto de um usuário pela primeira vez. (Resolver)
+* Criar uma pasta chamada ```photos``` em ```'storage/app/public/'``` e colocar o arquivo default-user.jpg
+* 
+* No arquivo ```AuthController```
+```php
+if ($request->user()->photo && Storage::disk('public')->exists($request->user()->photo) && $request->user()->photo <p style="color: red">!= 'photos/default-user.jpg'</p>") {
+Storage::disk('public')->delete($request->user()->photo);
+}
+```
 
 
 ```
