@@ -108,6 +108,8 @@ Obs: As pastas tem que estar **SEPARADAS**, não podemos misturar as duas.
 * Mude a porta do servidor do LivePreview do VScode para 5501(era pra ser a padrão 5500 mas por algum motivo no meu PC ele mudou), mais fácil em vez de mudar o JS em cada linha.
 https://www.youtube.com/watch?v=yXNh70VH47Y.
 
+* Na pasta 'storage/app/public' criar uma pasta chamada 'photos', para funcionar o default-user.jpg
+
 
 ```
 composer install
